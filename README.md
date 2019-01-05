@@ -1,7 +1,8 @@
 # Docker commands
 
 ### Show Commands
-#### show Docker version
+
+#### Docker version
 ```sh
 $ docker version
 ```
@@ -11,10 +12,9 @@ $ docker version
 $ docker info
 ```
 
-### Working with containers
+## Working with containers
 ##### About Containers
 Docker containers are often compared to virtual machines but they are actually just processes running on your host os. In Windows/Mac, Docker runs in a mini-VM so to see the processes you will need to connect directly to that. On Linux run "ps aux" and see the processes directly.
-
 #### Create and run a container in foreground
 ```sh
 $ docker container run -it -p 80:80 nginx
@@ -72,7 +72,85 @@ $ docker rm $(docker ps -aq)
 ```sh
 $ docker container logs <NAME>
 ```
-#### List processes running in container
+#### List processes running in Container
 ```sh
 $ docker container top <NAME>
+```
+## Image Commands
+##### About Images
+- Images are app bianaries and dependencies with meta data about the image data and how to run the image
+- Images are no a complete OS. No kernel, kernel modules (drivers)
+- Host provides the kernel, big difference between VM
+#### List images pulled
+```sh
+$ docker image ls
+```
+#### Pull an image
+```sh
+$ docker pull <image>
+```
+#### Remove an image
+```sh
+$ docker image rm <image>
+```
+#### Remove all images
+```sh
+$ docker rmi $(docker images -a -q)
+```
+## Sample container creation
+NGINX:
+```sh
+$ docker container run -d -p 80:80 --name nginx nginx (-p 80:80 is optional as it runs on 80 by default)
+```
+APACHE:
+```sh
+$ docker container run -d -p 8080:80 --name apache httpd
+```
+MONGODB:
+```sh
+$ docker container run -d -p 27017:27017 --name mongo mongo
+```
+MYSQL:
+```sh
+$ docker container run -d -p 3306:3306 --name mysql --env MYSQL_ROOT_PASSWORD=123456 mysql
+```
+## Container info
+
+### View info on container
+```sh
+$ docker container inspect <NAME>
+```
+### View Specific property (--format)
+```sh
+$ docker container inspect --format '{{ .NetworkSettings.IPAddress }}' <NAME>
+```
+### View Performance stats (cpu, mem, network, disk, etc)
+```sh
+$ docker container stats <NAME>
+```
+
+## Accessing Container
+### Create new nginx container and bash into
+```sh
+$ docker container run -it --name <NAME> nginx bash
+```
+- i = interactive Keep STDIN open if not attached
+- t = tty - Open prompt
+
+### Run/Create Ubuntu container
+```sh
+$ docker container run -it --name ubuntu ubuntu
+```
+(no bash because ubuntu uses bash by default)
+### You can also make it so when you exit the container does not stay by using the -rm flag
+```sh
+$ docker container run --rm -it --name <NAME> ubuntu
+```
+### Access an already created container, start with -ai
+```sh
+$ docker container start -ai ubuntu
+```
+### Use exec to edit config, etc
+```sh
+$ docker container exec -it mysql bash
 ```
