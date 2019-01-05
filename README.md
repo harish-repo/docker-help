@@ -51,7 +51,7 @@ $ docker container stop <ID>
 $ docker stop $(docker ps -aq)
 ```
 #### Remove Container
-###### can't remove running containers, must stop first)
+###### can't remove running containers, must stop first
 ```sh
 $ docker container rm <ID>
 ```
